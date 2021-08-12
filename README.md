@@ -1,7 +1,7 @@
 # SlackTool
 A feature rich, configurable questing tool for Wizard101. Built using WizWalker.
 
-Hotkeys:
+**Hotkeys:**
 
 -Sync client locations with client p1
 
