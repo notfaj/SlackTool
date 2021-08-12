@@ -21,17 +21,21 @@ A feature rich, configurable questing tool for Wizard101. Built using WizWalker.
 
 -X and Spacebar presses to pass on those key presses to all clients.
 
+
 **How to change hotkeys:**
 
 Change the values set in the SlackTool-config.ini. Key names can be found in WizWalker's constants.py.
+
 
 **How to disable updating:**
 
 Change the auto_updating value in the SlackTool-config.ini.
 
+
 **How to force an update to a specific version:**
 
 Set the current version in the config to the desired version (it must actually exist).
+
 
 ***Be sure to save your changes.***
 
