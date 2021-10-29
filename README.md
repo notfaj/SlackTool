@@ -13,7 +13,7 @@ A feature rich, configurable questing tool for Wizard101. Built using WizWalker.
 
 -Teleport all clients to their respective quests (auto adjusting)
 
--Toggle auto combat (only uses AOES and damage enchants, set your decks accordingly)
+-Toggle auto combat (currently unstable and doesn't work with a lot of weird utilities)
 
 -Toggle speed multiplier
 
