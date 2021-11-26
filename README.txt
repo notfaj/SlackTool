@@ -25,6 +25,3 @@ What hotkeys exist:
   -Noclip up
   -Noclip forward
   -Noclip down
-
--Auto questing and auto combat:
--NOT DONE YET
