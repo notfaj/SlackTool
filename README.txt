@@ -19,7 +19,6 @@ What hotkeys exist:
   -Navmap quest TP (selected client)
   -Navmap quest TP for all clients. Which client the teleport obeys varies depending on the scenario.
   -Toggle speed multplier
-  -Friend teleport all clients to P1 (look at SlackTool's builtin INFO message regarding this, you'll see it when you launch the tool)
   -Kill SlackTool
   -Toggle auto combat
   -Noclip up
