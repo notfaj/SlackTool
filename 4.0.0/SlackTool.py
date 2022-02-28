@@ -12,7 +12,7 @@ from loguru import logger
 import datetime
 from configparser import ConfigParser
 import statistics
-from SlackFighter4 import SlackFighter
+from SlackFighter5 import SlackFighter
 from SlackTeleport import SlackTeleport
 import PySimpleGUI as sg
 # from navigable_client import NavigableClient

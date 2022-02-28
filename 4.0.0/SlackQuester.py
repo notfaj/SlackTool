@@ -1,17 +1,12 @@
 from asyncio.windows_events import NULL
-from pydoc import cli
 from tempfile import TemporaryDirectory
-from turtle import goto
 from typing import *
 import asyncio
-from gc import collect
 from tkinter import dialog
 from tokenize import Triple
-from matplotlib import matplotlib_fname
 import wizwalker
 from wizwalker import WizWalker, Keycode, XYZ, utils
-from wizwalker.extensions.scripting import teleport_to_friend_from_list
-from wizwalker.memory import WindowFlags, Window
+from wizwalker.memory import  Window
 import math
 import os
 from os import path
@@ -29,7 +24,7 @@ import struct
 import zlib
 from io import BytesIO
 from SlackTeleport import SlackTeleport, TypedBytes
-from SlackFighter4 import SlackFighter
+from SlackFighter5 import SlackFighter
 from wizwalker import XYZ, Keycode, MemoryReadError
 from wizwalker.memory import DynamicClientObject
 from concavehull import concavehull
@@ -222,7 +217,7 @@ class SlackQuester():
 		await self.combat()
 
 		quest_type = await self.find_quest_type(quest_name_path)
-
+		
 		if quest_type == "talk to":
 			#TODO add code for going to new world
 			while True:
@@ -486,9 +481,8 @@ class SlackQuester():
 
 	async def find_quest_entites(self, parsed_quest_info:list ,entity: dict):
 		types_list = ['BehaviorInstance', 'ObjectStateBehavior', 'RenderBehavior', 'SelectBehavior', 'CollisionBehaviorClient']
-		types_app = []
 		points = await self.Nav_Hull()
-		Hull = points[0::2] # TODO remove points that are close to draw distance of each other
+		Hull = points [0::2] # TODO remove points that are close to draw distance of each other
 		#teleport around the hull and collect rendered objects, add them to a dict and their location
 		for points in Hull:
 			points = XYZ(points.x, points.y, points.z - 350)
@@ -496,6 +490,7 @@ class SlackQuester():
 			await self.client.teleport(points)
 			entities = await self.client.get_base_entity_list()
 			for e in entities:
+				types_app = []
 				try:
 					temp = await e.object_template()
 					name = await temp.object_name()
@@ -507,7 +502,7 @@ class SlackQuester():
 								for b in behaviors:
 									a = await b.read_type_name()
 									types_app.append(a)
-								if types_app == types_list:
+								if len(types_app) == len(types_list):
 									xyz = await e.location()
 									if name in entity:
 										# append the new number to the existing array at this slot
@@ -516,6 +511,39 @@ class SlackQuester():
 										# create a new array in this slot
 										entity[name] = [xyz]
 									break
+				except MemoryReadError:
+					await asyncio.sleep(0.05)
+				except AttributeError:
+					await asyncio.sleep(0.05)
+
+	async def find_quest_entites1(self, parsed_quest_info:list ,entity: dict):
+		points = await self.Nav_Hull()
+		Hull = points[0::2] # TODO remove points that are close to draw distance of each other
+		#teleport around the hull and collect rendered objects, add them to a dict and their location
+		for points in Hull:
+			points = XYZ(points.x, points.y, points.z - 350)
+			await self.client.teleport(points,move_after = False)
+			await self.client.teleport(points)
+			entities = await self.client.get_base_entity_list()
+			for e in entities:
+				try:
+					temp = await e.object_template()
+					display_name = await temp.display_name()
+					if not display_name.strip() == "":
+						try:
+							name = await self.client.cache_handler.get_langcode_name(display_name)
+							print(name+" : "+display_name)
+						except:
+							name = ""
+						if name in parsed_quest_info:
+							xyz = await e.location()
+							if name in entity:
+								# append the new number to the existing array at this slot
+								entity[name].append(xyz)
+							else:
+								# create a new array in this slot
+								entity[name] = [xyz]
+							break
 				except MemoryReadError:
 					await asyncio.sleep(0.05)
 				except AttributeError:
@@ -597,7 +625,7 @@ class SlackQuester():
 				await asyncio.sleep(0.5)
 				await self.client.teleport(XYZ(i.x, i.y, i.z - 350))
 				await asyncio.sleep(0.5)
-				can_Teleport = await self.find_safe_entities_from(i, NULL , safe_distance=1400, is_mob=True) #checks if it's safe
+				can_Teleport = await self.find_safe_entities_from(i, NULL , safe_distance=1700, is_mob=True) #checks if it's safe
 				if can_Teleport == True:
 					await self.client.teleport(XYZ(i.x, i.y, i.z - 230)) #teleports up a little
 					for a in range(5):
@@ -622,10 +650,10 @@ class SlackQuester():
 							await asyncio.sleep(0.5)
 							await self.client.teleport(XYZ(i.x, i.y, i.z - 350))
 							await asyncio.sleep(0.5)
-						can_Teleport = await self.find_safe_entities_from(i, NULL , safe_distance=1400, is_mob=True) # checks if safe to collect
+						can_Teleport = await self.find_safe_entities_from(i, NULL , safe_distance=1700, is_mob=True) # checks if safe to collect
 						if can_Teleport == True:
 							await self.client.teleport(XYZ(i.x, i.y, i.z - 230))
-							for a in range(5):
+							for a in range(4):
 								await self.client.send_key(Keycode.A, 0.1)
 								await self.client.send_key(Keycode.D, 0.1)
 								try:
@@ -747,6 +775,7 @@ class SlackQuester():
 
 
 	async def tp_to_quest_mob(self):
+		await self.loading_check()
 		battle = SlackFighter(self.client)
 		sprinty = SprintyClient(self.client)
 		quest_name = await self.get_window_from_path(self.client.root_window, quest_name_path)

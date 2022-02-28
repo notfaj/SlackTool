@@ -78,7 +78,7 @@ class SprintyClient():
                 return False
         return await self.get_base_entities_with_predicate(_pred, excluded_ids)
 
-    async def find_safe_entities_from(self, entities: List[DynamicClientObject], safe_distance: float = 700) \
+    async def find_safe_entities_from(self, entities: List[DynamicClientObject], safe_distance: float = 900) \
             -> List[DynamicClientObject]:
         mob_positions = []
         a = (await self.client.stats.current_gold())
